@@ -167,14 +167,3 @@ class Player:
       self.played_card = None
       print("Not Supposed To Happen")
     return cards
-
-
-if __name__ == "__main__":
-  game = Game()
-  game.add_player("p1")
-  game.add_player("p2")
-  game.start()
-  game.play_card("p1", 0)
-  game.play_card("p2", 0)
-  print(game.serialize_players_info("p1"))
-  print(game.serialize_players_info("p2"))
