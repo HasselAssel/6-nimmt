@@ -1,0 +1,9 @@
+[project]
+name = "6-nimmt"
+version = "0.1.0"
+description = "game"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "aiohttp>=3.9",
+]

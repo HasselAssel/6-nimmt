@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connect to Game</title>
+  <link rel="stylesheet" href="connect.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>Connect to Game</h1>
+
+    <div class="field">
+      <label for="addr">IP Address</label>
+      <input id="addr"/>
+    </div>
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name"/>
+    </div>
+
+    <div class="buttons">
+      <button id="connectBtn">Connect</button>
+      <button id="startBtn" class="hidden">Start Game</button>
+    </div>
+
+    <div id="status" class="status idle">Idle</div>
+  </div>
+
+  <script src="connect.js"></script>
+</body>
+</html>
