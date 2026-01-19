@@ -9,7 +9,7 @@ or
 ```
 with aiohttp as a package
 
-<br>connect to port 6767: 'http://<your-ip>:6767'
+<br>connect to port 6767: 'http://\<your-ip\>:6767'
 
 <br>'/' is http served
 <br>'/ws' is web socket served
