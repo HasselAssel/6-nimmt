@@ -71,17 +71,19 @@ class GameServer:
       elif msg_type == "play_card":
         idx = msg.get("index")
         if idx is not None:
-          self.game.play_card(token, idx)
+          actions = self.game.play_card(token, idx)
+          if actions: await self.broadcast({"type": "animations", "animations": actions})
 
       elif msg_type == "choose_stack":
         idx = msg.get("index")
         if idx is not None:
-          self.game.choose_stack(token, idx)
+          actions = self.game.choose_stack(token, idx)
+          if actions: await self.broadcast({"type": "animations", "animations": actions})
 
       await self.broadcast_gamestate()
 
   async def broadcast(self, payload: dict):
-    raw = json.dumps(payload)
+    raw = json.dumps(payload, default=lambda x: x.__dict__)
     for t, ws in list(self.clients.items()):
       try:
         await ws.send_str(raw)

@@ -49,7 +49,8 @@ class Game:
     if player in self.waiting_for_card:
       if self.players[player].play_card(index):
         self.waiting_for_card.remove(player)
-      self._check_everyone_played_card()
+      actions = self._check_everyone_played_card()
+      return actions
 
   def choose_stack(self, player, index):
     if player == self.waiting_for_stack and 0 <= index and index < 4:
@@ -62,27 +63,31 @@ class Game:
       player.played_card = None
       self.waiting_for_stack = None
 
-      self._play_on_stacks()
+      res, actions = self._play_on_stacks()
+      return actions
 
   def _play_on_stacks(self):
+    actions = []
     player_conns = sorted((conn for conn, player in self.players.items() if player.played_card is not None), 
                     key=lambda conn: self.players[conn].played_card.face)
     for conn in player_conns:
       player = self.players[conn]
-      correct_stack = max((s for s in self.stacks if s[-1].face < player.played_card.face),
-                  key=lambda s: s[-1].face,
-                  default=None)
+      correct_index, correct_stack = max(((i, s) for i, s in enumerate(self.stacks) if s[-1].face < player.played_card.face),
+                  key=lambda x: x[1][-1].face,
+                  default=(None, None))
       if not correct_stack:
         self.waiting_for_stack = conn
-        return False
+        return False, actions
       if len(correct_stack) >= 5:
         player.card_points.extend(correct_stack)
         correct_stack.clear()
+        actions.append({"action": "pick_stack", "stack": correct_index, "player": conn})
       correct_stack.append(player.played_card)
+      actions.append({"action": "play_card", "stack": correct_index, "player": conn})
       player.played_card = None
     self._all_waiting_for_card()
     self._check_end_of_round()
-    return True
+    return True, actions
 
   def _check_end_of_round(self):
     if len(next(iter(self.players.values())).hand) == 0:
@@ -90,7 +95,9 @@ class Game:
 
   def _check_everyone_played_card(self):
     if len(self.waiting_for_card) == 0:
-      self._play_on_stacks()
+      reveal_action = {"action": "reveal_cards", "revealed_cards": {conn: player.played_card for conn, player in self.players.items()}}
+      res, actions = self._play_on_stacks()
+      return [reveal_action] + actions
 
   def _all_waiting_for_card(self):
     self.waiting_for_card.update(self.players.keys())
