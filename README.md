@@ -1,5 +1,7 @@
 # 6-nimmt
 
+[Rules](https://en.wikipedia.org/wiki/6_nimmt!)
+
 ```bash
 uv run game-server.py
 ```
